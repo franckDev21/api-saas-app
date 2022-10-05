@@ -15,14 +15,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('fisrstname');
+            $table->string('firstname');
             $table->string('lastname');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role',['SUPER','ADMIN','ENTREPRISE','ADMIN','USER'])->default('ENTREPRISE');
-            $table->boolean('as_company')->default(false);
-            $table->integer('company_id')->nullable();
+            $table->boolean('as_company')->default(true);
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

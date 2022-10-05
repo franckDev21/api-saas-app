@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('country');
             $table->string('tel')->nullable();
-            $table->string('email');
+            $table->string('email')->unique();
             $table->integer('number_of_employees');
             $table->timestamps();
         });
