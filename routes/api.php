@@ -24,5 +24,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::apiResource('users',UserController::class);
         // get user info
         Route::post('auth/user/info',[AuthController::class,'getUserInfo']);
+        // update user information
+        Route::post('auth/user',[UserController::class,'updateUserInfo']);
     });
 });

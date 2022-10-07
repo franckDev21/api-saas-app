@@ -19,6 +19,24 @@ class UserController extends Controller
         return UserResource::collection(User::all());
     }
 
+    public function updateUserInfo(Request $request){
+        $request->validate([
+            'firstname'  => 'required|string|min:3|max:200',
+            'lastname'  => 'required|string|min:3|max:200',
+            'email' => 'required|email',
+        ]);
+
+        $request->user()->update([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'email' => $request->email,
+        ]);
+
+        $user = User::findOrFail($request->user()->id);
+
+        return response($user,201);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
