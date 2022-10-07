@@ -47,7 +47,7 @@ class AuthController extends Controller
         // Check password
         if(!$user || !Hash::check($request->password, $user->password)){
             return response([
-                'message' => 'Bad creds'
+                'message' => 'Incorrect identifier'
             ],401);
         }
 
@@ -68,5 +68,9 @@ class AuthController extends Controller
         return response([
             'message' => 'Logged Out'
         ]);
+    }
+
+    public function getUserInfo(Request $request){
+        return $request->user();
     }
 }

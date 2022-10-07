@@ -22,5 +22,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('auth/logout',[AuthController::class,'logout']);
         // users
         Route::apiResource('users',UserController::class);
+        // get user info
+        Route::post('auth/user/info',[AuthController::class,'getUserInfo']);
     });
 });
