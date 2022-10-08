@@ -61,6 +61,31 @@ class AuthController extends Controller
         return response($response,201);
     }
 
+    public function updateUserPassword(Request $request){
+        $request->validate([
+            'old_password' => 'required|string',
+            'new_password' => 'required|string',
+            'confirm_password' => 'required|string'
+        ]);
+
+
+        if(!Hash::check($request->old_password,$request->user()->password)){
+            return "Incorrect password";
+        }
+        
+        if(trim($request->new_password) !== trim($request->confirm_password)){
+            return "The passwords do not match";
+        }
+
+        $request->user()->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return response([
+            'message' => 'Your password has been successfully updated'
+        ],201);
+    }
+
 
     public function logout(Request $request){
         auth()->user()->tokens()->delete();

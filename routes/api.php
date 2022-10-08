@@ -26,5 +26,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('auth/user/info',[AuthController::class,'getUserInfo']);
         // update user information
         Route::post('auth/user',[UserController::class,'updateUserInfo']);
+        // update password
+        Route::post('auth/user/password',[AuthController::class,'updateUserPassword']);
     });
 });
