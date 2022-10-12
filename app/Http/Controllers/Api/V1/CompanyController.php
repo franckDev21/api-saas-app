@@ -19,15 +19,70 @@ class CompanyController extends Controller
         return CompanyResource::collection(Company::all());
     }
 
+    public function myCompany(Request $request){
+        return $request->user()->company;
+    }
+
+    public function updatePictureCompany(Request $request,Company $company){
+        // we check if it is the user's company
+
+        // we update the company's logo
+        $request->validate([
+            'image' => 'required|mimes:png,jpg,jpeg,PNG,JPG,JPEG,jfif,JFIF|max:4000'
+        ]);
+
+        $filename = time() . '.' . $request->image->extension();
+        $path = $request->image->storeAs('img/companies', $filename, 'public');
+
+        $company->update([
+            'logo' => $path
+        ]);
+
+        return response([
+            'message' => 'The lego of your company has been successfully updated',
+            'path'    => $path
+        ],201);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        // we check if it is the user's company
+        $rules = [
+            'name' => 'required',
+            'address' => 'required',
+            'country' => 'required',
+            'city' => 'required',
+            'tel' => 'required',
+            'email' => 'required|email|max:50|unique:companies',
+            'number_of_employees' => 'required',
+        ];
+
+        if($request->description){
+            $rules['description'] = 'max:255';
+        }
+
+        if($request->postal_code){
+            $rules['postal_code'] = 'max:200';
+        }
+
+        $data = $request->validate($rules);
+
+        $company = Company::create($data);
+
+        $request->user()->update([
+            'as_company' => true,
+            'company_id' => $company->id
+        ]);
+
+        return response([
+            'message' => 'Your company has been successfully created ',
+            'company_id' => $company->id
+        ],201);
     }
 
     /**
@@ -50,7 +105,32 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+        // we check if it is the user's company
+        $rules = [
+            'name' => 'required',
+            'address' => 'required',
+            'country' => 'required',
+            'city' => 'required',
+            'tel' => 'required',
+            'email' => 'required|email|max:50',
+            'number_of_employees' => 'required',
+        ];
+
+        if($request->description){
+            $rules['description'] = 'max:255';
+        }
+
+        if($request->postal_code){
+            $rules['postal_code'] = 'max:200';
+        }
+
+        $data = $request->validate($rules);
+
+        $company->update($data);
+
+        return response([
+            'message' => 'The information of your company has been successfully updated'
+        ],201);
     }
 
     /**
@@ -61,6 +141,7 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        // 
+        
     }
 }

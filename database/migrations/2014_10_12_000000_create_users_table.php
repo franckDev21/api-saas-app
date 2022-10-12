@@ -19,10 +19,12 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('email')->unique();
+            $table->string('tel')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role',['SUPER','ADMIN','ENTREPRISE','ADMIN','USER'])->default('ENTREPRISE');
-            $table->boolean('as_company')->default(true);
+            $table->boolean('as_company')->default(false);
+            $table->boolean('active')->default(false);
             $table->foreignId('company_id')
                 ->nullable()
                 ->constrained()

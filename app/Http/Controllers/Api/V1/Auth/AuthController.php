@@ -51,7 +51,7 @@ class AuthController extends Controller
             ],401);
         }
 
-        $token = $user->createToken('M2mwMYQ91JKNfw5uFJ8LocsInqzZL')->plainTextToken;
+        $token = $user->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
 
         $response = [
             'user'  => $user,

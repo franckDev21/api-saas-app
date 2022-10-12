@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('address');
             $table->string('country');
+            $table->string('postal_code')->nullable();
+            $table->string('city');
             $table->string('tel')->nullable();
             $table->string('email')->unique();
             $table->integer('number_of_employees');

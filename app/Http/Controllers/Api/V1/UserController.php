@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -14,9 +15,20 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(Request $request){
+        if($request->user()->role === 'SUPER'){
+            return UserResource::collection(User::with('company')->where('role','ENTREPRISE')->get());
+        }
         return UserResource::collection(User::all());
+    }
+
+    public function getUsers(Request $request){
+        return UserResource::collection(User::with('company')
+            ->where('role','ENTREPRISE')
+            ->where('company_id',$request->user()->company_id)
+            ->where('id','!=',$request->user()->id)
+            ->get()
+        );
     }
 
     public function updateUserInfo(Request $request){
@@ -37,15 +49,78 @@ class UserController extends Controller
         return response($user,201);
     }
 
+    public function updateUserPicture(Request $request){
+
+        $request->validate([
+            'image' => 'required|mimes:png,jpg,jpeg,PNG,JPG,JPEG,jfif,JFIF|max:4000'
+        ]);
+
+        $filename = time() . '.' . $request->image->extension();
+        $path = $request->image->storeAs('img/users', $filename, 'public');
+
+        $request->user()->update([
+            'photo' => $path
+        ]);
+
+        return response([
+            'message' => 'Your profile picture has been successfully updated ! ',
+            'path'    => $path
+        ],201);
+    }
+
+    public function toggleActiveUserCompany(User $user){
+        $user->update([
+            'active' => !$user->active
+        ]);
+
+        $res = $user->active ? 'activated':'deactivated';
+
+        return response([
+            'message' => "The company has been {$res}"
+        ],201);
+    }
+
+    public function toggleActiveUser(User $user){
+        $user->update([
+            'active' => !$user->active
+        ]);
+
+        $res = $user->active ? 'activated':'deactivated';
+
+        return response([
+            'message' => "The user has been {$res}"
+        ],201);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+
+        $request->validate([
+            'firstname' => 'required|string|min:2|max:250',
+            'lastname' => 'required|string|min:2|max:250',
+            'email' => 'required|string|min:2|max:250|email|unique:users',
+            'password' => 'required|string|confirmed'
+        ]);
+
+        $active = $request->active ? true : false; 
+
+        $user = User::create([
+            'firstname'  => $request->firstname,
+            'lastname'   => $request->lastname,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
+            'company_id' => $request->user()->company_id,
+            'active'     => $active
+        ]);
+
+        return response([
+            'message' => 'Your user has been successfully created !'
+        ],201);
     }
 
     /**
@@ -80,5 +155,13 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function deleteUserCompany(User $user){
+        $user->delete();
+
+        return response([
+            'message' => "company '{$user->company->name}' has been successfully deleted!"
+        ],201);
     }
 }

@@ -17,10 +17,11 @@ class CompanyFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->company(),
             'description' => 'Descrip ...',
             'address' => fake()->address(),
             'country' => fake()->country(),
+            'city'   => fake()->city(),
             'tel' => fake()->phoneNumber(),
             'email' => fake()->companyEmail(),
             'number_of_employees' => rand(5,100)
