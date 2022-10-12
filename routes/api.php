@@ -15,9 +15,6 @@ Route::group(['prefix' => 'v1'],function(){
     // auth
     Route::post('auth/register',[AuthController::class,'register']);
     Route::post('auth/login',[AuthController::class,'login']);
-
-    // // Public route
-    // Route::apiResource('companies',CompanyController::class);
     
     // Protected route
     Route::group(['middleware' => ['auth:sanctum']],function(){
@@ -26,7 +23,6 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('users/companies',[UserController::class,'index']);
         Route::delete('users/companies/{user}',[UserController::class,'deleteUserCompany']);
         Route::post('users/companies/toggle-active/{user}',[UserController::class,'toggleActiveUserCompany']);
-        // my/company
 
         // company
         Route::get('my/company',[CompanyController::class,'myCompany']);
