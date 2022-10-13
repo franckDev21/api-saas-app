@@ -57,13 +57,16 @@ class CompanyController extends Controller
             'address' => 'required',
             'country' => 'required',
             'city' => 'required',
-            'tel' => 'required',
             'email' => 'required|email|max:50|unique:companies',
             'number_of_employees' => 'required',
         ];
 
         if($request->description){
             $rules['description'] = 'max:255';
+        }
+
+        if($request->tel){
+            $rules['tel'] = 'string';
         }
 
         if($request->postal_code){

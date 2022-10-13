@@ -24,7 +24,7 @@ class UserController extends Controller
 
     public function getUsers(Request $request){
         return UserResource::collection(User::with('company')
-            ->where('role','ENTREPRISE')
+            ->where('role','USER')
             ->where('company_id',$request->user()->company_id)
             ->where('id','!=',$request->user()->id)
             ->get()
@@ -115,7 +115,8 @@ class UserController extends Controller
             'email'      => $request->email,
             'password'   => Hash::make($request->password),
             'company_id' => $request->user()->company_id,
-            'active'     => $active
+            'active'     => $active,
+            'role'       => 'USER'
         ]);
 
         return response([
