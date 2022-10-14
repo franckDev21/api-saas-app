@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\CompanyController;
+use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,11 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('users/companies',[UserController::class,'index']);
         Route::delete('users/companies/{user}',[UserController::class,'deleteUserCompany']);
         Route::post('users/companies/toggle-active/{user}',[UserController::class,'toggleActiveUserCompany']);
+
+        // custumers
+        Route::get('customers',[CustomerController::class,'index']);
+        Route::post('customers',[CustomerController::class,'store']);
+
 
         // company
         Route::get('my/company',[CompanyController::class,'myCompany']);

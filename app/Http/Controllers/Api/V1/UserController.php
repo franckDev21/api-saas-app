@@ -109,7 +109,7 @@ class UserController extends Controller
 
         $active = $request->active ? true : false; 
 
-        $user = User::create([
+        User::create([
             'firstname'  => $request->firstname,
             'lastname'   => $request->lastname,
             'email'      => $request->email,

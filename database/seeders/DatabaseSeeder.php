@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'SUPER',
             'as_company' => false
         ]);
+        \App\Models\Customer::factory(10)->create();
     }
 }
