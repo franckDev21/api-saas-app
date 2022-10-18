@@ -28,6 +28,9 @@ Route::group(['prefix' => 'v1'],function(){
         // custumers
         Route::get('customers',[CustomerController::class,'index']);
         Route::post('customers',[CustomerController::class,'store']);
+        Route::delete('customers/{customer}',[CustomerController::class,'destroy']);
+        Route::get('customer/{customer}',[CustomerController::class,'show']);
+        Route::post('customer/{customer}',[CustomerController::class,'update']);
 
 
         // company

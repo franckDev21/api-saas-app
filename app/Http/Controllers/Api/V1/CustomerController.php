@@ -59,9 +59,10 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show(Request $request, Customer $customer)
     {
-        //
+        if($customer->company_id === $request->user()->company_id)
+            return response(CustomerResource::make($customer),201);
     }
 
     /**
@@ -73,7 +74,25 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $request->validate([
+            'firstname' => 'required|min:2',
+            'lastname' => 'required|min:2',
+            'tel' => 'sometimes|string:max:100',
+            'address' => 'sometimes|max:100',
+            'email' => 'sometimes|email'
+        ]);
+
+        $customer->update([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'tel' => $request->tel,
+            'address' => $request->address,
+            'email' => $request->email ,
+        ]);
+
+        return response([
+            'message' => "Your user has been successfully updated"
+        ],201);
     }
 
     /**
@@ -84,6 +103,10 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+
+        return response([
+            'message' => "Customer '{$customer->company->name}' has been successfully deleted!"
+        ],201);
     }
 }
