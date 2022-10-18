@@ -27,5 +27,48 @@ class DatabaseSeeder extends Seeder
             'as_company' => false
         ]);
         \App\Models\Customer::factory(10)->create();
+
+        \App\Models\ProductSupplier::factory(1)->create([
+            'name' => "Alibaba",
+        ]);
+        \App\Models\ProductSupplier::factory(1)->create([
+            'name' => "Amazon",
+        ]);
+
+
+        \App\Models\Category::factory(1)->create([
+            'name' => "Produit de plomberie",
+        ]);
+        \App\Models\Category::factory(1)->create([
+            'name' => "Electroménager",
+        ]);
+        \App\Models\Category::factory(1)->create([
+            'name' => "Nutrition",
+        ]);
+
+         \App\Models\ProductType::factory(1)->create([
+            'name' => "VENDU_PAR_PIECE",
+            'slug' => 'Vendu par pièce',
+            'unite_de_mesure' => 'KG',
+         ]);
+
+         \App\Models\ProductType::factory(1)->create([
+            'slug' => "Vendu par kg/g",
+            'name' => "VENDU_PAR_KG",
+            'unite_de_mesure' => 'KG',
+         ]);
+
+         \App\Models\ProductType::factory(1)->create([
+            'slug' => "Vendu par litre",
+            'name' => "VENDU_PAR_LITRE",
+            'unite_de_mesure' => 'L',
+         ]);
+        
+         \App\Models\ProductType::factory(1)->create([
+            'slug' => "Vendu par nombre par conteneur",
+            'name' => "VENDU_PAR_NOMBRE_PAR_CONTENEUR",
+            'unite_de_mesure' => 'KG',
+         ]);
+
     }
 }
