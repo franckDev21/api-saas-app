@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductSupplier;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class ProductSupplierController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class ProductSupplierController extends Controller
      */
     public function index()
     {
-        return ProductSupplier::all();
+        return Category::all();
     }
 
     /**
@@ -32,10 +32,10 @@ class ProductSupplierController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ProductSupplier  $productSupplier
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(ProductSupplier $productSupplier)
+    public function show(Category $category)
     {
         //
     }
@@ -44,10 +44,10 @@ class ProductSupplierController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ProductSupplier  $productSupplier
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProductSupplier $productSupplier)
+    public function update(Request $request, Category $category)
     {
         //
     }
@@ -55,10 +55,10 @@ class ProductSupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ProductSupplier  $productSupplier
+     * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductSupplier $productSupplier)
+    public function destroy(Category $category)
     {
         //
     }

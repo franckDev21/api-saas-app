@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('qte_en_stock');
+            $table->string('qte_stock_alert');
             $table->string('prix_unitaire');
             $table->string('image')->nullable();
             $table->string('type_approvisionnement');
+            $table->boolean('is_stock')->default(false);
 
             $table->string('unite_restante')->nullable();
             $table->double('poids')->nullable();

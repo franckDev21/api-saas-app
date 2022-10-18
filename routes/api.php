@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\CustomerController;
+use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,8 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('customer/{customer}',[CustomerController::class,'show']);
         Route::post('customer/{customer}',[CustomerController::class,'update']);
 
+        // products
+        Route::get('products',[ProductController::class,'index']);
 
         // company
         Route::get('my/company',[CompanyController::class,'myCompany']);
