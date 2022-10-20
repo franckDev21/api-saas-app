@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\ProductController;
@@ -35,6 +36,14 @@ Route::group(['prefix' => 'v1'],function(){
 
         // products
         Route::get('products',[ProductController::class,'index']);
+        Route::post('products',[ProductController::class,'store']);
+        Route::get('product/{product}',[ProductController::class,'show']);
+        Route::delete('product/{product}',[ProductController::class,'destroy']);
+        Route::get('products/types',[ProductController::class,'getTypes']);
+        Route::get('products/suppliers',[ProductController::class,'getSuppliers']);
+
+        // categories
+        Route::get('categories',[CategoryController::class,'index']);
 
         // company
         Route::get('my/company',[CompanyController::class,'myCompany']);
@@ -43,6 +52,7 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('my/company/{company}',[CompanyController::class,'update']);
         Route::post('user/toggle-active/{user}',[UserController::class,'toggleActiveUser']);
 
+        // logout
         Route::post('auth/logout',[AuthController::class,'logout']);
 
         // users
