@@ -38,9 +38,12 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('products',[ProductController::class,'index']);
         Route::post('products',[ProductController::class,'store']);
         Route::get('product/{product}',[ProductController::class,'show']);
+        Route::post('product/{product}',[ProductController::class,'update']);
         Route::delete('product/{product}',[ProductController::class,'destroy']);
         Route::get('products/types',[ProductController::class,'getTypes']);
         Route::get('products/suppliers',[ProductController::class,'getSuppliers']);
+        Route::post('products/add/{product}/input/supply',[ProductController::class,'addInput']);
+        Route::post('products/add/{product}/output',[ProductController::class,'addOutput']);
 
         // categories
         Route::get('categories',[CategoryController::class,'index']);
