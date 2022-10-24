@@ -45,6 +45,10 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('products/add/{product}/input/supply',[ProductController::class,'addInput']);
         Route::post('products/add/{product}/output',[ProductController::class,'addOutput']);
 
+        // histoty
+        Route::get('history/all',[ProductController::class,'getAllHistory']);
+        Route::get('history/procurement',[ProductController::class,'getProcurement']);
+
         // categories
         Route::get('categories',[CategoryController::class,'index']);
 

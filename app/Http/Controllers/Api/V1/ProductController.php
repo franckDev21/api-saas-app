@@ -29,6 +29,14 @@ class ProductController extends Controller
     public function getSuppliers(){
         return ProductSupplier::all();
     }
+
+    public function getAllHistory(){
+        return ProductHistory::with(['product','user'])->latest()->get();
+    }
+
+    public function getProcurement(){
+        return Supply::with(['product','user'])->latest()->get();
+    }
     
     public function addInput(Request $request,Product $product){
         $request->validate([
