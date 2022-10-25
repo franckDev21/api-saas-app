@@ -71,7 +71,7 @@ Route::group(['prefix' => 'v1'],function(){
 
         // users
         Route::get('users',[UserController::class,'getUsers']);
-        Route::post('/users/create',[UserController::class,'store']);
+        Route::post('users/create',[UserController::class,'store']);
 
         // get user info
         Route::post('auth/user/info',[AuthController::class,'getUserInfo']);
