@@ -16,7 +16,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        return CustomerResource::collection(Customer::with('company')
+        return CustomerResource::collection(Customer::with(['company','orders'])
             ->where('company_id',$request->user()->company_id)
             ->get()
         );

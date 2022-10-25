@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,10 @@ Route::group(['prefix' => 'v1'],function(){
         Route::get('products/suppliers',[ProductController::class,'getSuppliers']);
         Route::post('products/add/{product}/input/supply',[ProductController::class,'addInput']);
         Route::post('products/add/{product}/output',[ProductController::class,'addOutput']);
+
+        // orders
+        Route::get('orders',[OrderController::class,'index']);
+        Route::post('orders',[OrderController::class,'store']);
 
         // histoty
         Route::get('history/all',[ProductController::class,'getAllHistory']);
