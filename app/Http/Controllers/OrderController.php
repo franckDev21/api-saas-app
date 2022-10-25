@@ -145,7 +145,28 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order = Order::with(['orderProducts','customer','user'])->where('id',$order->id)->latest()->first();
+        $products = $order->orderProducts;
+        $newProductsTab =  [];
+
+        foreach($products as $product){
+            $newProductsTab[] = [
+                'id' => $product->id,
+                'order_id' => $product->order_id,
+                'prix_de_vente' => $product->prix_de_vente,
+                'product_id' => $product->product_id,
+                'qte' => $product->qte,
+                'type_de_vente' => $product->type_de_vente,
+                'updated_at' => $product->updated_at,
+                'created_at' => $product->created_at,
+                'product' => Product::find($product->product_id),
+            ];
+        }
+
+        return response([
+            'order'    => $order,
+            'products' => $newProductsTab
+        ],201);
     }
 
     /**
@@ -168,6 +189,15 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        if($order->statut !== 'PAYER'){
+            $order->delete();
+            return response([
+                "message" => "the order has been successfully deleted!"
+            ],201);
+        }else{
+            return response([
+                "error" => "The order has already been paid"
+            ],201);
+        }
     }
 }
