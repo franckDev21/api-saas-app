@@ -51,6 +51,8 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('orders',[OrderController::class,'store']);
         Route::get('orders/{order}',[OrderController::class,'show']);
         Route::delete('orders/{order}',[OrderController::class,'destroy']);
+        Route::post('orders/pay/{order}',[OrderController::class,'payer']);
+        Route::get('orders/{order}/invoice',[OrderController::class,'getInvoice']);
 
         // histoty
         Route::get('history/all',[ProductController::class,'getAllHistory']);

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cash;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\ProductHistory;
+use App\Models\TotalCash;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -166,6 +168,52 @@ class OrderController extends Controller
         return response([
             'order'    => $order,
             'products' => $newProductsTab
+        ],201);
+    }
+
+    public function getInvoice(Order $order){
+        $invoice = Invoice::with(['order','customer'])->where('order_id',$order->id)->first();
+        return $invoice;
+    }
+
+    public function payer(Request $request,Order $order){
+
+        if($order->etat === 'PAYER'){
+            return response([
+                'error' => "This order has already been paid"
+            ]);
+        }
+
+        // on met a jour l'etat de la order
+        $order->update([
+            'etat' => 'PAYER'
+        ]);
+
+        // on met a jour la caisse
+        Cash::create([
+            'user_id' => $request->user()->id,
+            'type' => 'ENTRER',
+            'montant' => (int)implode('',explode('.',$order->cout)),
+            'order_id' => $order->id,
+            'motif'   => 'Payment of the order'
+        ]);
+
+        $caisse = TotalCash::first();
+
+        if(!$caisse){
+            $caisse = TotalCash::create([
+                'montant' => 0
+            ]);
+        }
+
+        $total = $caisse->sum('montant');
+
+        $caisse->update([
+            'montant' => (int)$total + (int)implode('',explode('.',$order->cout))
+        ]);
+
+        return response([
+            "message" => "The order has been successfully registered"
         ],201);
     }
 
