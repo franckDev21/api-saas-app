@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
+use App\Http\Controllers\Api\V1\CashierController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\CustomerController;
+use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\OrderController;
@@ -53,6 +55,14 @@ Route::group(['prefix' => 'v1'],function(){
         Route::delete('orders/{order}',[OrderController::class,'destroy']);
         Route::post('orders/pay/{order}',[OrderController::class,'payer']);
         Route::get('orders/{order}/invoice',[OrderController::class,'getInvoice']);
+
+        // invoices
+        Route::get('invoices',[InvoiceController::class,'index']);
+        Route::delete('invoices/{invoice}',[InvoiceController::class,'destroy']);
+
+        // cash
+        Route::get('cashiers',[CashierController::class,'index']);
+        Route::get('cashiers/total',[CashierController::class,'getTotal']);
 
         // histoty
         Route::get('history/all',[ProductController::class,'getAllHistory']);
