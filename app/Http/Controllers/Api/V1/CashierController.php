@@ -30,7 +30,7 @@ class CashierController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    { 
         $data = $request->validate([
             'montant' => 'required',
             'motif' => 'required',
