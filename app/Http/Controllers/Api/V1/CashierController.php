@@ -31,8 +31,79 @@ class CashierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'montant' => 'required',
+            'motif' => 'required',
+        ]);
+        
+        
+        Cash::create(array_merge([
+            'user_id' => $request->user()->id,
+            'type' => 'ENTRER'
+        ],$data));
+
+        $caisse = TotalCash::first();
+
+        if(!$caisse){
+            $caisse = TotalCash::create([
+                'montant' => 0
+            ]);
+        }
+
+        $total = $caisse->sum('montant');
+
+        $caisse->update([
+            'montant' => (int)$total + (int)$request->montant
+        ]);
+
+        return response([
+            "message" => "New entry registered!"
+        ],201);
     }
+
+
+    public function output(Request $request){
+        
+
+        $data = $request->validate([
+            'montant' => 'required',
+            'motif' => 'required',
+        ]);
+
+        $caisses = TotalCash::all();
+        
+        if(!$caisses->first()){
+            TotalCash::create([
+                'montant' => 0
+            ]);
+        }
+
+        $total = $caisses->sum('montant');
+
+        if((int)$request->montant <= $total){
+            $caisse = TotalCash::first();
+
+            $caisse->update([
+                'montant' => (int)$total - (int)$request->montant
+            ]);
+            
+            Cash::create(array_merge([
+                'user_id' => auth()->user()->id,
+                'type'    => 'SORTIR'
+            ],$data));
+    
+            return response([
+                "message" => "New release recorded !"
+            ],201);
+
+        }else{
+            return response([
+                'error' => 'Montant insufissant !'
+            ],201);
+        }
+        
+    }
+
 
     /**
      * Display the specified resource.

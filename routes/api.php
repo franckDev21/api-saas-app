@@ -63,6 +63,8 @@ Route::group(['prefix' => 'v1'],function(){
         // cash
         Route::get('cashiers',[CashierController::class,'index']);
         Route::get('cashiers/total',[CashierController::class,'getTotal']);
+        Route::post('cashiers',[CashierController::class,'store']);
+        Route::post('cashiers/output',[CashierController::class,'output']);
 
         // histoty
         Route::get('history/all',[ProductController::class,'getAllHistory']);
