@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\ProductSupplierController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
@@ -72,6 +73,11 @@ Route::group(['prefix' => 'v1'],function(){
 
         // categories
         Route::get('categories',[CategoryController::class,'index']);
+        Route::post('categories',[CategoryController::class,'store']);
+
+        // product suppliers
+        Route::get('product-suppliers',[ProductSupplierController::class,'index']);
+        Route::post('product-suppliers',[ProductSupplierController::class,'store']);
 
         // company
         Route::get('my/company',[CompanyController::class,'myCompany']);

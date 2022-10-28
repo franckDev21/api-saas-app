@@ -26,7 +26,34 @@ class ProductSupplierController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+            'name' => 'requires'
+        ];
+
+        if($request->address){
+            $rules['address'] = 'required';
+        }
+        if($request->tel){
+            $rules['tel'] = 'required';
+        }
+        if($request->email){
+            $rules['email'] = 'required';
+        }
+
         //
+        $request->validate($rules);
+
+        ProductSupplier::create([
+            'name' => $request->name,
+            'address' => $request->address ?? null,
+            'tel' => $request->tel ?? null,
+            'email' => $request->email ?? null,
+        ]);
+
+        return response([
+            'message' => 'Your supplier has been successfully added '
+        ],201);
+
     }
 
     /**
