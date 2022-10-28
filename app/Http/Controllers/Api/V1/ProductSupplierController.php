@@ -27,7 +27,7 @@ class ProductSupplierController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'requires'
+            'name' => 'required'
         ];
 
         if($request->address){
@@ -40,7 +40,6 @@ class ProductSupplierController extends Controller
             $rules['email'] = 'required';
         }
 
-        //
         $request->validate($rules);
 
         ProductSupplier::create([
@@ -87,6 +86,9 @@ class ProductSupplierController extends Controller
      */
     public function destroy(ProductSupplier $productSupplier)
     {
-        //
+        $productSupplier->delete();
+        return response([
+            "message" => "This supplier has been successfully removed !"
+        ],201);
     }
 }

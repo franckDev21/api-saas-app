@@ -74,10 +74,12 @@ Route::group(['prefix' => 'v1'],function(){
         // categories
         Route::get('categories',[CategoryController::class,'index']);
         Route::post('categories',[CategoryController::class,'store']);
+        Route::delete('categories/{category}',[CategoryController::class,'destroy']);
 
         // product suppliers
         Route::get('product-suppliers',[ProductSupplierController::class,'index']);
         Route::post('product-suppliers',[ProductSupplierController::class,'store']);
+        Route::delete('product-suppliers/{productSupplier}',[ProductSupplierController::class,'destroy']);
 
         // company
         Route::get('my/company',[CompanyController::class,'myCompany']);
