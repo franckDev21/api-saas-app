@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\UserResource;
+use App\Mail\ContactMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -165,4 +167,21 @@ class UserController extends Controller
             'message' => "company '{$user->company->name}' has been successfully deleted!"
         ],201);
     }
+
+
+    public function contact(Request $request){
+        Mail::to('tiomelafranck724@gmail.com')
+            ->send(new ContactMail([
+                'email' => $request->email,
+                'name' => $request->name,
+                'tel' => $request->tel,
+                'content' => $request->content,
+            ]));
+
+        return response([
+            'message' => 'votre a été envoyer avec succès !'
+        ],201);
+    }
+
+
 }

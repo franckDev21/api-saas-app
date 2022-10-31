@@ -22,6 +22,8 @@ Route::group(['prefix' => 'v1'],function(){
     // auth
     Route::post('auth/register',[AuthController::class,'register']);
     Route::post('auth/login',[AuthController::class,'login']);
+
+    Route::post('contact',[UserController::class,'contact']);
     
     // Protected route
     Route::group(['middleware' => ['auth:sanctum']],function(){
