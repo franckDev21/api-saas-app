@@ -33,6 +33,9 @@ Route::group(['prefix' => 'v1'],function(){
         Route::delete('users/companies/{user}',[UserController::class,'deleteUserCompany']);
         Route::post('users/companies/toggle-active/{user}',[UserController::class,'toggleActiveUserCompany']);
 
+        // dashboard
+        Route::get('/dashboard',[UserController::class,'dashboard']);
+
         // custumers
         Route::get('customers',[CustomerController::class,'index']);
         Route::post('customers',[CustomerController::class,'store']);

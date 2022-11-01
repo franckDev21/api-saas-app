@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\UserResource;
 use App\Mail\ContactMail;
 use App\Mail\RegisterUserInfoMail;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\TotalCash;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +27,31 @@ class UserController extends Controller
             return UserResource::collection(User::with('company')->where('role','ENTREPRISE')->get());
         }
         return UserResource::collection(User::all());
+    }
+
+    public function dashboard(Request $request){
+
+        $totalUser = User::where('company_id',$request->user()->company_id)->count();
+
+        $caisse = TotalCash::first();
+            if(!$caisse){
+                $caisse = TotalCash::create([
+                    'montant' => 0
+                ]);
+            }
+
+        $totalCash = TotalCash::first()->montant;
+        $totalCustomer = Customer::where('company_id',$request->user()->company_id)->count();
+        $totalOrder = Order::where('company_id',$request->user()->company_id)->count();
+        $totalProduct = Product::where('company_id',$request->user()->company_id)->count();
+
+        return response([
+            'totalCash' => $totalCash,
+            'totalCustomer' => $totalCustomer,
+            'totalProduct' => $totalProduct,
+            'totalUser' => $totalUser,
+            'totalOrder' => $totalOrder
+        ],201);
     }
 
     public function getUsers(Request $request){
