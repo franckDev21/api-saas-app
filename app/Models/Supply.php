@@ -14,7 +14,8 @@ class Supply extends Model
         'prix_achat',
         'quantite',
         'is_unite',
-        'user_id'
+        'user_id',
+        'company_id'
     ];
 
     public function product(){

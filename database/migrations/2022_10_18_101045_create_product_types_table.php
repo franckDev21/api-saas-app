@@ -23,6 +23,11 @@ return new class extends Migration
             ]);
             $table->string('slug');
             $table->enum('unite_de_mesure',['KG','G','L','ML']);
+            
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('cascade');
 
             $table->timestamps();
         });

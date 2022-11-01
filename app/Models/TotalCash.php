@@ -9,5 +9,5 @@ class TotalCash extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['montant'];
+    protected $fillable = ['montant','company_id'];
 }

@@ -14,7 +14,8 @@ class Cash extends Model
         'type',
         'montant',
         'order_id',
-        'motif'
+        'motif',
+        'company_id'
     ];
 
     public function order(){

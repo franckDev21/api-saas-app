@@ -13,6 +13,7 @@ class ProductSupplier extends Model
         'name',
         'address',
         'tel',
-        'email'
+        'email',
+        'company_id'
     ];
 }

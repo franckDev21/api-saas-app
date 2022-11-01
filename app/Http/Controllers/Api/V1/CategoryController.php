@@ -13,9 +13,9 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Category::all();
+        return Category::where('company_id',$request->user()->company_id)->get();
     }
 
     /**
@@ -31,7 +31,8 @@ class CategoryController extends Controller
         ]);
 
         Category::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'company_id' => $request->user()->company_id
         ]);
 
         return response([

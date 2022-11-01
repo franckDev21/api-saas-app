@@ -20,6 +20,10 @@ return new class extends Migration
             $table->integer('quantite');
             $table->boolean('is_unite')->default(false);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

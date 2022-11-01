@@ -21,6 +21,11 @@ return new class extends Migration
             $table->integer('prix_de_vente')->default(0);
             $table->string('type_de_vente')->default('PIECE');
             $table->integer('qte');
+            
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('cascade');
 
             $table->timestamps();
         });

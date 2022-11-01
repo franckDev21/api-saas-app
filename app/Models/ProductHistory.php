@@ -16,7 +16,8 @@ class ProductHistory extends Model
         'old_state_stock',
         'is_unite',
         'product_id',
-        'user_id'
+        'user_id',
+        'company_id'
     ];
 
     public function product(){

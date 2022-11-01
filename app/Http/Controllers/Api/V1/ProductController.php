@@ -17,25 +17,33 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Product::with(['productSupplier','category','ProductType'])->latest()->get();
+        if(!$request->user()->company_id) return [];
+        
+        return Product::with(['productSupplier','category','ProductType'])
+            ->where('company_id',$request->user()->company_id)
+            ->latest()->get();
     }
 
-    public function getTypes(){
+    public function getTypes(Request $request){
         return ProductType::all();
     }
 
-    public function getSuppliers(){
-        return ProductSupplier::all();
+    public function getSuppliers(Request $request){
+        return ProductSupplier::where('company_id',$request->user()->company_id)->get();
     }
 
-    public function getAllHistory(){
-        return ProductHistory::with(['product','user'])->latest()->get();
+    public function getAllHistory(Request $request){
+        return ProductHistory::with(['product','user'])
+            ->where('company_id',$request->user()->company_id)
+            ->latest()->get();
     }
 
-    public function getProcurement(){
-        return Supply::with(['product','user'])->latest()->get();
+    public function getProcurement(Request $request){
+        return Supply::with(['product','user'])
+            ->where('company_id',$request->user()->company_id)
+            ->latest()->get();
     }
     
     public function addInput(Request $request,Product $product){
@@ -64,7 +72,8 @@ class ProductController extends Controller
             'prix_achat' => $request->prix_achat,
             'quantite'   => $request->quantite,
             'user_id'    => $request->user()->id,
-            'is_unite'   => false
+            'is_unite'   => false,
+            'company_id' => $request->user()->company_id,
         ]);
 
         // new hitory
@@ -73,7 +82,8 @@ class ProductController extends Controller
             'type'      => 'ENTRÉE',
             'motif'     => 'Approvisionnement',
             'product_id' => $product->id,
-            'user_id'   => $request->user()->id
+            'user_id'   => $request->user()->id,
+            'company_id' => $request->user()->company_id,
         ]);
 
         return response([
@@ -83,7 +93,10 @@ class ProductController extends Controller
     }
 
     public function addOutput(Request $request,Product $product){
-        $product = Product::with(['productSupplier','category','productType'])->where('id',$product->id)->first();
+        $product = Product::with(['productSupplier','category','productType'])
+            ->where('id',$product->id)
+            ->where('company_id',$request->user()->company_id)
+            ->first();
 
         $request->validate([
             'quantite'   => 'required',
@@ -135,7 +148,8 @@ class ProductController extends Controller
                     'motif'     => $request->motif,
                     'product_id' => $product->id,
                     'user_id'   => $request->user()->id,
-                    'is_unite'  => $request->type === 'CARTON' ? false : true
+                    'is_unite'  => $request->type === 'CARTON' ? false : true,
+                    'company_id' => $request->user()->company_id,
                 ]);
 
                 return response([
@@ -168,7 +182,8 @@ class ProductController extends Controller
                     'motif'     => $request->motif,
                     'product_id' => $product->id,
                     'user_id'   => $request->user()->id,
-                    'is_unite'  => $request->type === 'CARTON' ? false : true
+                    'is_unite'  => $request->type === 'CARTON' ? false : true,
+                    'company_id' => $request->user()->company_id,
                 ]);
 
                 return response([
@@ -231,7 +246,9 @@ class ProductController extends Controller
 
         $data['image'] = $path ?? null;
 
-        Product::create($data);
+        Product::create(array_merge([
+            'company_id' => $request->user()->company_id,
+        ],$data));
 
         return response([
             'message' => "Your product has been successfully registered"

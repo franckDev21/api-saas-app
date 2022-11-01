@@ -16,7 +16,8 @@ class Order extends Model
         'etat',
         'customer_id',
         'user_id'  ,
-        'desc'
+        'desc',
+        'company_id'
     ];
 
     public function scopeFilter($query,$filters){

@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('total_cashes', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('montant');
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

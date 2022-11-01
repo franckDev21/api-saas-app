@@ -13,9 +13,9 @@ class ProductSupplierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ProductSupplier::all();
+        return ProductSupplier::where('company_id',$request->user()->company_id)->get();
     }
 
     /**
@@ -47,6 +47,7 @@ class ProductSupplierController extends Controller
             'address' => $request->address ?? null,
             'tel' => $request->tel ?? null,
             'email' => $request->email ?? null,
+            'company_id' => $request->user()->company_id
         ]);
 
         return response([
@@ -84,8 +85,10 @@ class ProductSupplierController extends Controller
      * @param  \App\Models\ProductSupplier  $productSupplier
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductSupplier $productSupplier)
+    public function destroy(Request $request,ProductSupplier $productSupplier)
     {
+        if($request->user()->company_id !== $productSupplier->company_id) return null;
+        
         $productSupplier->delete();
         return response([
             "message" => "This supplier has been successfully removed !"
