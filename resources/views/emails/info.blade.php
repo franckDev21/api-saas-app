@@ -18,13 +18,16 @@
 </head>
 <body>
   <div class="container">
-    <img src="{{ asset('logo3.png') }}" alt="">
-    <h2>NOUVEAU MESSAGE DE CONTACT !</h2>
+    <h1>Salut {{ $user->firstname }} {{ $user->lastname }} , voici vos identifiants de connexion : </h1>
     <hr>
-    <h1>Bonjour ALL Heigth corp, <span class="primary">{{ $data['name'] }}</span></h1>
     <p style="padding: 10px; background-color:#eee; border-radius: .4rem;">
-      {{ $data['content'] }}
+      Prenom : {{ $user->firstname }} <br>
+      Nom : {{ $user->firstname }} <br>
+      Email : {{ $user->email }} <br>
+      Mot de passe : {{ $password }} <br>
     </p>
+
+    <h3>Connecter vous directement <a class="primary" href="https://gm-smart.vercel.app/">içi</a>!</h3>
   </div>
 </body>
 </html>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\UserResource;
 use App\Mail\ContactMail;
+use App\Mail\RegisterUserInfoMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -111,7 +112,7 @@ class UserController extends Controller
 
         $active = $request->active ? true : false; 
 
-        User::create([
+        $user = User::create([
             'firstname'  => $request->firstname,
             'lastname'   => $request->lastname,
             'email'      => $request->email,
@@ -120,6 +121,9 @@ class UserController extends Controller
             'active'     => $active,
             'role'       => 'USER'
         ]);
+
+        Mail::to($request->email)
+            ->send(new RegisterUserInfoMail($user,$request->password));
 
         return response([
             'message' => 'Your user has been successfully created !'
