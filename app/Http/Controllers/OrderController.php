@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\V1\InvoiceResourve;
+use App\Mail\InvoiceMail;
 use App\Models\Cash;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -10,6 +12,7 @@ use App\Models\Product;
 use App\Models\ProductHistory;
 use App\Models\TotalCash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -147,7 +150,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order = Order::with(['orderProducts','customer','user'])->where('id',$order->id)->latest()->first();
+        $order = Order::with(['orderProducts','customer','user','invoice'])->where('id',$order->id)->latest()->first();
         $products = $order->orderProducts;
         $newProductsTab =  [];
 
@@ -173,7 +176,7 @@ class OrderController extends Controller
 
     public function getInvoice(Order $order){
         $invoice = Invoice::with(['order','customer'])->where('order_id',$order->id)->first();
-        return $invoice;
+        return InvoiceResourve::make($invoice);
     }
 
     public function payer(Request $request,Order $order){
@@ -215,6 +218,62 @@ class OrderController extends Controller
         return response([
             "message" => "The order has been successfully registered"
         ],201);
+    }
+
+    public function invoice(Request $request, Order $order){
+
+        $order->update([
+            'etat' => 'FACTURER'
+        ]);
+
+        $order = Order::with(['customer','orderProducts','user','invoice'])->where('id',$order->id)->first();
+
+        if($request->payer){
+            if($order->etat === 'PAYER'){
+                return back()->with('warning','Cette commande a déjà été payer');
+            }
+    
+            // on met a jour l'etat de la commande
+            $order->update([
+                'etat' => 'PAYER'
+            ]);
+    
+            // on met a jour la caisse
+            Cash::create([
+                'user_id' => $request->user()->id,
+                'type' => 'ENTRER',
+                'montant' => (int)implode('',explode('.',$order->cout)),
+                'order_id' => $order->id,
+                'motif'   => 'Paiement de la commande'
+            ]);
+    
+            $caisse = TotalCash::first();
+    
+            if(!$caisse){
+                $caisse = TotalCash::create([
+                    'montant' => 0
+                ]);
+            }
+    
+            $total = $caisse->sum('montant');
+    
+            $caisse->update([
+                'montant' => (int)$total + (int)implode('',explode('.',$order->cout))
+            ]);
+        }
+            
+        $orders = $order->orderProducts;
+
+
+        if(isset($order->customer->email) ){
+            // on envoi un mail l'utilisateur
+            Mail::to($order->customer->email)
+                ->send(new InvoiceMail($order,$orders));
+        }
+
+
+        return response(['message' => "Email envoyer",201]);
+
     }
 
     /**

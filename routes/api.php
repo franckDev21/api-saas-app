@@ -61,6 +61,7 @@ Route::group(['prefix' => 'v1'],function(){
 
         // invoices
         Route::get('invoices',[InvoiceController::class,'index']);
+        Route::post('invoices/{order}',[OrderController::class,'invoice']);
         Route::delete('invoices/{invoice}',[InvoiceController::class,'destroy']);
 
         // cash
