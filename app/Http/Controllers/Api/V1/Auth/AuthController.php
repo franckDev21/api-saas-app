@@ -26,7 +26,7 @@ class AuthController extends Controller
                 'password' => 'required|string|confirmed'
             ]);
         }
-
+        
         $user = User::create([
             'firstname' => $request->firstname,
             'lastname'  => $request->lastname,
@@ -62,12 +62,19 @@ class AuthController extends Controller
 
         $token = $user->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
 
-        $response = [
-            'user'  => $user,
-            'token' => $token
-        ];
-
-        return response($response,201);
+        if($user->active){
+            $response = [
+                'user'  => $user,
+                'token' => $token
+            ];
+    
+            return response($response,201);
+        }else{
+            return response([
+                'error' => "Votre compte n’a pas encore été activé"
+            ],201);
+        }
+        
     }
 
     public function updateUserPassword(Request $request){

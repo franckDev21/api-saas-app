@@ -31,19 +31,21 @@ class UserController extends Controller
 
     public function dashboard(Request $request){
 
-        $totalUser = User::where('company_id',$request->user()->company_id)->count();
+        $totalUser = $request->user()->company_id ? User::where('company_id',$request->user()->company_id)->count() : ($request->user()->role ==='SUPER' ? User::where('role','ENTREPRISE')->count() : 0);
 
-        $caisse = TotalCash::first();
+        $caisse = TotalCash::where('company_id',$request->user()->company_id)->first();
             if(!$caisse){
                 $caisse = TotalCash::create([
-                    'montant' => 0
+                    'montant' => 0,
+                    'company_id' => $request->user()->company_id
                 ]);
             }
 
-        $totalCash = TotalCash::first()->montant;
-        $totalCustomer = Customer::where('company_id',$request->user()->company_id)->count();
-        $totalOrder = Order::where('company_id',$request->user()->company_id)->count();
-        $totalProduct = Product::where('company_id',$request->user()->company_id)->count();
+        $totalCash = $request->user()->company_id ? TotalCash::where('company_id',$request->user()->company_id)->first()->montant : 0;
+
+        $totalCustomer =  $request->user()->company_id ?  Customer::where('company_id',$request->user()->company_id)->count() : 0;
+        $totalOrder =  $request->user()->company_id ?  Order::where('company_id',$request->user()->company_id)->count() : 0;
+        $totalProduct =  $request->user()->company_id ?  Product::where('company_id',$request->user()->company_id)->count() : 0;
 
         return response([
             'totalCash' => $totalCash,
@@ -146,16 +148,16 @@ class UserController extends Controller
             'lastname'   => $request->lastname,
             'email'      => $request->email,
             'password'   => Hash::make($request->password),
-            'company_id' => $request->user()->company_id,
+            'company_id' => $request->user()->role === 'SUPER' ? null:$request->user()->company_id,
             'active'     => $active,
-            'role'       => 'USER'
+            'role'       => $request->user()->role === 'SUPER' ? 'ENTREPRISE':'USER'
         ]);
 
-        Mail::to($request->email)
-            ->send(new RegisterUserInfoMail($user,$request->password));
+        // Mail::to($request->email)
+        //     ->send(new RegisterUserInfoMail($user,$request->password));
 
         return response([
-            'message' => 'Your user has been successfully created !'
+            'message' => 'Votre utilisateur a été crée avec succès !'
         ],201);
     }
 

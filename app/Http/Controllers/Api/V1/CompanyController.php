@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\CompanyResource;
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -50,7 +51,8 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request){
+    public function store(Request $request,User $user){
+        
         // we check if it is the user's company
         $rules = [
             'name' => 'required',
@@ -74,10 +76,10 @@ class CompanyController extends Controller
         }
 
         $data = $request->validate($rules);
-
+    
         $company = Company::create($data);
 
-        $request->user()->update([
+        $user->update([
             'as_company' => true,
             'company_id' => $company->id
         ]);
@@ -85,6 +87,27 @@ class CompanyController extends Controller
         return response([
             'message' => 'Your company has been successfully created ',
             'company_id' => $company->id
+        ],201);
+    }
+
+    public function storeLogo(Request $request,Company $company){
+
+        
+        $request->validate([
+            'photo' => 'required|mimes:png,jpg,jpeg,PNG,JPG,jpG,Jpg,jPg,jPG,JPEG,jfif,JFIF,avif,AVIF|max:8000'
+        ]);
+
+        if($request->photo){
+            $filename = time() . '.' . $request->photo->extension();
+            $path = $request->photo->storeAs('img/company/logo', $filename, 'public');
+        }
+
+        $company->update([
+            'logo' => $path ?? null
+        ]);
+
+        return response([
+            "message" => "ok"
         ],201);
     }
 

@@ -24,9 +24,13 @@ Route::group(['prefix' => 'v1'],function(){
     Route::post('auth/login',[AuthController::class,'login']);
 
     Route::post('contact',[UserController::class,'contact']);
+
+     // company
+     Route::post('my/company/{user}',[CompanyController::class,'store']);
+     Route::post('my/company/logo/{company}',[CompanyController::class,'storeLogo']);
     
     // Protected route
-    Route::group(['middleware' => ['auth:sanctum']],function(){
+    Route::group(['middleware' => ['auth:sanctum','active']],function(){
 
         // users
         Route::get('users/companies',[UserController::class,'index']);
@@ -87,10 +91,10 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('product-suppliers',[ProductSupplierController::class,'store']);
         Route::delete('product-suppliers/{productSupplier}',[ProductSupplierController::class,'destroy']);
 
-        // company
+       
         Route::get('my/company',[CompanyController::class,'myCompany']);
         Route::post('my/company/picture/{company}',[CompanyController::class,'updatePictureCompany']);
-        Route::post('my/company',[CompanyController::class,'store']);
+        
         Route::post('my/company/{company}',[CompanyController::class,'update']);
         Route::post('user/toggle-active/{user}',[UserController::class,'toggleActiveUser']);
 

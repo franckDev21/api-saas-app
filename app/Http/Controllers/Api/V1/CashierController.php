@@ -14,13 +14,24 @@ class CashierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Cash::with(['order','user'])->latest()->get();
+        if($request->user()->company_id){
+            return Cash::with(['order','user'])
+            ->where('company_id',$request->user()->company_id)
+            ->latest()->get();
+        }else{
+            return [];
+        }
     }
 
-    public function getTotal(){
-        return TotalCash::first();
+    public function getTotal(Request $request){
+        if($request->user()->company_id){
+            return TotalCash::where('company_id',$request->user()->company_id)->first();
+        }else{
+            return [];
+        }
+        
     }
 
     /**

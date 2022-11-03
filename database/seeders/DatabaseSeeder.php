@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             'lastname' => 'H corp',
             'email' => 'info@allhcorp.com',
             'role' => 'SUPER',
-            'as_company' => false
+            'as_company' => false,
+            'active' => true
         ]);
         \App\Models\Customer::factory(10)->create();
 

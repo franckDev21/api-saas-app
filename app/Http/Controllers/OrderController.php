@@ -42,13 +42,15 @@ class OrderController extends Controller
             'cout'      => $request->totalCommande,
             'customer_id' => $request->client,
             'user_id'   => $request->user()->id,
-            'etat'      => 'IMPAYER'
+            'etat'      => 'IMPAYER',
+            'company_id' => $request->user()->company_id
         ]);
 
         // on créé la facture
         Invoice::create([
             'customer_id'     => $request->client,
-            'order_id'   => $commande->id
+            'order_id'   => $commande->id,
+            'company_id' => $request->user()->company_id
         ]);
 
         foreach($request->carts as $cart){
@@ -126,7 +128,8 @@ class OrderController extends Controller
                     'motif'     => 'Commande',
                     'product_id'=> $cart->id,
                     'user_id'   => $request->user()->id,
-                    'is_unite'  => true
+                    'is_unite'  => true,
+                    'company_id' => $request->user()->company_id
                 ]);
 
             } else {
