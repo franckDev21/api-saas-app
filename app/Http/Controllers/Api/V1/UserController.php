@@ -153,8 +153,8 @@ class UserController extends Controller
             'role'       => $request->user()->role === 'SUPER' ? 'ENTREPRISE':'USER'
         ]);
 
-        // Mail::to($request->email)
-        //     ->send(new RegisterUserInfoMail($user,$request->password));
+        Mail::to($request->email)
+            ->send(new RegisterUserInfoMail($user,$request->password));
 
         return response([
             'message' => 'Votre utilisateur a été crée avec succès !'

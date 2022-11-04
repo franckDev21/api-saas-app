@@ -9,7 +9,7 @@ class Invoice extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_id','order_id','company_id'];
+    protected $fillable = ['customer_id','order_id','company_id','reference'];
 
     public function customer(){
         return $this->belongsTo(Customer::class);
@@ -17,6 +17,10 @@ class Invoice extends Model
 
     public function order(){
         return $this->belongsTo(Order::class);
+    }
+
+    public function company(){
+        return $this->belongsTo(Company::class);
     }
 
 }

@@ -50,14 +50,16 @@ class CashierController extends Controller
         
         Cash::create(array_merge([
             'user_id' => $request->user()->id,
-            'type' => 'ENTRER'
+            'type' => 'ENTRER',
+            'company_id' => $request->user()->company_id
         ],$data));
 
         $caisse = TotalCash::first();
 
         if(!$caisse){
             $caisse = TotalCash::create([
-                'montant' => 0
+                'montant' => 0,
+                'company_id' => $request->user()->company_id
             ]);
         }
 
@@ -81,11 +83,12 @@ class CashierController extends Controller
             'motif' => 'required',
         ]);
 
-        $caisses = TotalCash::all();
+        $caisses = TotalCash::while('company_id',$request->user()->company_id)->all();
         
         if(!$caisses->first()){
             TotalCash::create([
-                'montant' => 0
+                'montant' => 0,
+                'company_id' => $request->user()->company_id
             ]);
         }
 
@@ -100,7 +103,8 @@ class CashierController extends Controller
             
             Cash::create(array_merge([
                 'user_id' => auth()->user()->id,
-                'type'    => 'SORTIR'
+                'type'    => 'SORTIR',
+                'company_id' => $request->user()->company_id
             ],$data));
     
             return response([

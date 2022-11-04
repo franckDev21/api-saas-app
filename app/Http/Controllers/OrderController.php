@@ -11,8 +11,10 @@ use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\ProductHistory;
 use App\Models\TotalCash;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -50,7 +52,8 @@ class OrderController extends Controller
         Invoice::create([
             'customer_id'     => $request->client,
             'order_id'   => $commande->id,
-            'company_id' => $request->user()->company_id
+            'company_id' => $request->user()->company_id,
+            'reference' => Str::upper(Str::replace('...','',Str::limit(User::with(['company'])->where('id',$request->user()->id)->first()->company->name,3))).'-'.date('Y/m/d') ?? '0'
         ]);
 
         foreach($request->carts as $cart){
@@ -201,14 +204,16 @@ class OrderController extends Controller
             'type' => 'ENTRER',
             'montant' => (int)implode('',explode('.',$order->cout)),
             'order_id' => $order->id,
-            'motif'   => 'Payment of the order'
+            'motif'   => 'Payment of the order',
+            'company_id'   => $request->user()->company_id,
         ]);
 
-        $caisse = TotalCash::first();
+        $caisse = TotalCash::where('company_id',$request->user()->company_id)->first();
 
         if(!$caisse){
             $caisse = TotalCash::create([
-                'montant' => 0
+                'montant' => 0,
+                'company_id' => $request->user()->company_id
             ]);
         }
 
