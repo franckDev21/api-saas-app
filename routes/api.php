@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\CashierController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\CompanyController;
 use App\Http\Controllers\Api\V1\CustomerController;
+use App\Http\Controllers\Api\V1\FileController;
 use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProductSupplierController;
@@ -19,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // ROUTE
 Route::group(['prefix' => 'v1'],function(){
+    
     // auth
     Route::post('auth/register',[AuthController::class,'register']);
     Route::post('auth/login',[AuthController::class,'login']);
@@ -29,6 +31,9 @@ Route::group(['prefix' => 'v1'],function(){
      Route::post('my/company/{user}',[CompanyController::class,'store']);
      Route::post('my/company/logo/{company}',[CompanyController::class,'storeLogo']);
     
+     // base65
+     Route::post('/base64',[FileController::class,'generateBase64']);
+
     // Protected route
     Route::group(['middleware' => ['auth:sanctum','active']],function(){
 
