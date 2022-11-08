@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('tel')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role',['SUPER','ADMIN','ENTREPRISE','ADMIN','USER'])->default('ENTREPRISE');
+            $table->enum('role',['SUPER','ENTREPRISE','ADMIN','USER'])->default('ENTREPRISE');
             $table->boolean('as_company')->default(false);
             $table->boolean('active')->default(false);
             $table->foreignId('company_id')
