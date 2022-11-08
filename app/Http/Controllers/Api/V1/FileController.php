@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\LogoCompany;
 use Illuminate\Http\Request;
 
 class FileController extends Controller
@@ -11,6 +12,14 @@ class FileController extends Controller
         $request->validate([
             'image' => 'required'
         ]);
-        return  base64_encode($request->image);
+        
+        LogoCompany::create([
+            'company_id' => $request->user()->company_id,
+            'data' => base64_encode($request->image)
+        ]);
+
+        return  [
+            'message' => base64_encode($request->image)
+        ];
     }
 }

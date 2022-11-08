@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('qte_en_stock')->default(0);
-            $table->string('qte_stock_alert');
+            $table->string('qte_stock_alert')->nullable();
             $table->string('prix_unitaire');
             $table->string('image')->nullable();
             $table->string('type_approvisionnement');

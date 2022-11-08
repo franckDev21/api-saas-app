@@ -10,10 +10,15 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\TotalCash;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportUser;
+use App\Exports\ExportUser;
+use App\Imports\ImportProduct;
+use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -29,6 +34,7 @@ class UserController extends Controller
         return UserResource::collection(User::all());
     }
 
+    
     public function dashboard(Request $request){
 
         $totalUser = $request->user()->company_id ? User::where('company_id',$request->user()->company_id)->count() : ($request->user()->role ==='SUPER' ? User::where('role','ENTREPRISE')->count() : 0);
@@ -217,6 +223,26 @@ class UserController extends Controller
             'message' => 'votre a été envoyer avec succès !'
         ],201);
     }
+
+
+
+    public function importView(Request $request){
+        return view('importFile');
+    }
+
+    public function importProduct(Request $request){
+        $path = $request->file->store('files');
+        Excel::import(new ImportProduct($request->user()->company_id),$path);
+        Storage::delete($path);
+        return response(['message' => "Votre liste des produits a été ajouté avec succès !"]);
+    }
+
+    public function exportUsers(Request $request){
+        return Excel::download(new ExportUser, 'users.xlsx');
+    }
+
+
+
 
 
 }

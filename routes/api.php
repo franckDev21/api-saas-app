@@ -37,6 +37,18 @@ Route::group(['prefix' => 'v1'],function(){
     // Protected route
     Route::group(['middleware' => ['auth:sanctum','active']],function(){
 
+        Route::get('test',function(Request $request){
+            return 'test '.$request->user();
+        });
+
+        Route::post('test',function(Request $request){
+            return 'test '.$request->user();
+        });
+
+        Route::post('/import/product',[UserController::class,'importProduct'])->name('import');
+        Route::get('/file-import',[UserController::class,'importView'])->name('import-view');
+        Route::get('/export-products',[UserController::class,'exportUsers'])->name('export-users');
+
         // users
         Route::get('users/companies',[UserController::class,'index']);
         Route::delete('users/companies/{user}',[UserController::class,'deleteUserCompany']);
