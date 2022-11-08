@@ -51,7 +51,7 @@ class ProductSupplierController extends Controller
         ]);
 
         return response([
-            'message' => 'Your supplier has been successfully added '
+            'message' => 'Votre fournisseur a été ajouté avec succès            '
         ],201);
 
     }
@@ -91,7 +91,7 @@ class ProductSupplierController extends Controller
         
         $productSupplier->delete();
         return response([
-            "message" => "This supplier has been successfully removed !"
+            "message" => "Votre fournisseur a été supprimé avec succès !"
         ],201);
     }
 }

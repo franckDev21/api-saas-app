@@ -25,7 +25,7 @@ class Product extends Model
         'category_id',
         'product_supplier_id',
         'product_type_id',
-        'company_id'
+        'company_id',
     ];
 
     public function category(){

@@ -36,7 +36,7 @@ class CategoryController extends Controller
         ]);
 
         return response([
-            'message' => 'Your category has been successfully added !'
+            'message' => 'Votre categorie a été ajouté avec succès !'
         ],201);
 
     }
@@ -74,7 +74,7 @@ class CategoryController extends Controller
     {
         $category->delete();
         return response([
-            "message" => "This category has been successfully removed !"
+            "message" => "Votre categorie a été supprimé avec succès "
         ],201);
     }
 }

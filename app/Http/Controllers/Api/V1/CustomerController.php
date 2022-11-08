@@ -49,7 +49,7 @@ class CustomerController extends Controller
         ]);
 
         return response([
-            'message' => "Your customer has been successfully created !"
+            'message' => "Votre client a été ajouté avec succès !"
         ],201);
     }
 
@@ -91,7 +91,7 @@ class CustomerController extends Controller
         ]);
 
         return response([
-            'message' => "Your user has been successfully updated"
+            'message' => "Les informations de votre client ont bien été mise à jour"
         ],201);
     }
 
@@ -106,7 +106,7 @@ class CustomerController extends Controller
         $customer->delete();
 
         return response([
-            'message' => "Customer '{$customer->company->name}' has been successfully deleted!"
+            'message' => "Le client '{$customer->company->name}' a bien été supprimé!"
         ],201);
     }
 }

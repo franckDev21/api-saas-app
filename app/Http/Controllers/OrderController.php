@@ -71,23 +71,23 @@ class OrderController extends Controller
             $cart = (object)$cart;
 
             $newNbreParCarton = 0;
-                        
-            if($cart->product_type['name'] === 'VENDU_PAR_KG'){
-                $nbreUnites =  ($cart->qte_en_stock * $cart->poids) + $cart->unite_restante;
-                $newNbreUnites = $nbreUnites - (int)$cart->qte;
-                $totalResteEntiere = intval($newNbreUnites / $cart->poids);
-                $resteUnites = $newNbreUnites % $cart->poids;
-                if($cart->type_de_vente === 'PIECE'){
-                    $resteUnites =  $nbreUnites %  $cart->poids;
-                }
+            
 
+            if($cart->product_type['name'] === 'VENDU_PAR_KG'){
+                $nbreUnites =  ((int)$cart->qte_en_stock * (int)$cart->poids) + (int)$cart->unite_restante;
+                $newNbreUnites = $nbreUnites - (int)$cart->qte;
+                $totalResteEntiere = intval($newNbreUnites / (int)$cart->poids);
+                $resteUnites = $newNbreUnites % (int)$cart->poids;
+                if($cart->type_de_vente === 'PIECE'){
+                    $resteUnites =  $nbreUnites %  (int)$cart->poids;
+                }
             }else if($cart->product_type['name'] === 'VENDU_PAR_LITRE'){
                 $nbreUnites =  ($cart->qte_en_stock * $cart->qte_en_litre) + $cart->unite_restante;
                 $newNbreUnites = $nbreUnites - (int)$cart->qte;
                 $totalResteEntiere = intval($newNbreUnites / $cart->qte_en_litre);
                 $resteUnites = $newNbreUnites % $cart->qte_en_litre;
                 if($cart->type_de_vente === 'PIECE'){
-                    $resteUnites =  $nbreUnites %  $cart->qte_en_littre;
+                    $resteUnites =  $nbreUnites %  $cart->qte_en_litre;
                 }
 
             }else if($cart->product_type['name'] === 'VENDU_PAR_NOMBRE_PAR_CONTENEUR'){
@@ -102,22 +102,22 @@ class OrderController extends Controller
             }else if($cart->product_type['name'] === 'VENDU_PAR_PIECE'){
                 $nbreUnites = $cart->qte_en_stock + $cart->unite_restante;
                 $newNbreUnites = $nbreUnites - (int)$cart->qte;
-                $newNbreParCarton = $newNbreUnites;
+                $totalResteEntiere = $newNbreUnites;
                 $resteUnites = 0;
             }
 
-            if ($newNbreUnites >= 0) {
+            if ($newNbreUnites > 0) {                
                 // increment qte product
-                $product = Product::find($cart->id);
+                $product = Product::where('company_id',$request->user()->company_id)->find($cart->id);
 
                 if($cart->type_de_vente === 'PIECE'){
-                    $newNbreParCarton = (int)$cart->qte_en_stock - (int)$cart->qte;
+                    $totalResteEntiere = (int)$cart->qte_en_stock - (int)$cart->qte;
                 }
 
                 $product->update([
-                    'qte_en_stock' => $newNbreParCarton,
+                    'qte_en_stock' => $totalResteEntiere,
                     'is_stock'     => $newNbreUnites > 0,
-                    'reste_unites' => $resteUnites
+                    'unite_restante' => $resteUnites
                 ]);
 
                 // if ($newNbreParCarton <= $product->qte_stock_alert) {
@@ -143,7 +143,7 @@ class OrderController extends Controller
         // Send an email to the user
 
          return response([
-            "message"  =>  "Your order has been successfully registered",
+            "message"  =>  "Votre commande  a été enregistré avec succès",
             "order_id" => $commande->id
         ],201);
     }
@@ -224,7 +224,7 @@ class OrderController extends Controller
         ]);
 
         return response([
-            "message" => "The order has been successfully registered"
+            "message" => "Votre commande a été payée avec succès !"
         ],201);
     }
 
@@ -307,11 +307,11 @@ class OrderController extends Controller
         if($order->statut !== 'PAYER'){
             $order->delete();
             return response([
-                "message" => "the order has been successfully deleted!"
+                "message" => "Votre commande a été supprimé avec succès"
             ],201);
         }else{
             return response([
-                "error" => "The order has already been paid"
+                "error" => "La commande a déjà été payer"
             ],201);
         }
     }

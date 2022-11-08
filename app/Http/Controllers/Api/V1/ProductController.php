@@ -153,12 +153,12 @@ class ProductController extends Controller
                 ]);
 
                 return response([
-                    "message" => 'The product was successfully redrawn !',
+                    "message" => 'Le produit a été retiré avec succès !',
                     'product' => Product::with(['productSupplier','category','ProductType'])->where('id',$product->id)->first()
                 ],201);
             } else {
                 return response([
-                    "error" => "The quantity in stock of $product->name is insufficient !"
+                    "error" => "La quantité en stock du $product->name est insuffisant  !"
                 ],201);
             }
         }else{
@@ -187,13 +187,13 @@ class ProductController extends Controller
                 ]);
 
                 return response([
-                    "message" => 'The product was successfully redrawn !',
+                    "message" => 'Le produit a été retiré avec succès !',
                     'product' => Product::with(['productSupplier','category','ProductType'])->where('id',$product->id)->first()
                 ],201);
                 
             }else{
                 return response([
-                    "error" => "The quantity in stock of $product->name is insufficient !"
+                    "error" => "La quantité en stock du $product->name est insuffisant  !"
                 ],201);
             }
         }
@@ -251,7 +251,7 @@ class ProductController extends Controller
         ],$data));
 
         return response([
-            'message' => "Your product has been successfully registered"
+            'message' => "Votre produit a bien été ajouté avec succès !            "
         ],201);
     }
 
@@ -315,7 +315,7 @@ class ProductController extends Controller
         $product->update($data);
 
         return response([
-            'message' => "Your product has been successfully updated !"
+            'message' => "Votre produit a été mise  à jour avec succès !"
         ],201);
     }
 
@@ -330,7 +330,7 @@ class ProductController extends Controller
         $product->delete();
 
         return response([
-            'message' => "Your product has been successfully deleted"
+            'message' => "Votre produit a été supprimé avec succès"
         ],201);
     }
 }
