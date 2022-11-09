@@ -22,10 +22,11 @@
     </head>
     <body class="antialiased">
         <div class="container mt-5 text-center">
-            <h2 class="mb-4">
+            <div class="text-5xl">Welcome</div>
+            {{-- <h2 class="mb-4">
                 Laravel 9 Import Export Excel & CSV File - <a href="https://techvblogs.com/blog/laravel-9-import-export-excel-csv-file" target="_blank">TechvBlogs</a>
-            </h2>
-            <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+            </h2> --}}
+            {{-- <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group mb-4">
                     <div class="custom-file text-left">
@@ -35,7 +36,7 @@
                 </div>
                 <button class="btn btn-primary">Import Users</button>
                 <a class="btn btn-success" href="{{ route('export-users') }}">Export Users</a>
-            </form>
+            </form> --}}
         </div>
     </body>
 </html>
