@@ -45,6 +45,16 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
+        // $basic  = new \Vonage\Client\Credentials\Basic("88ca908d", "2pAn4AWNsGYl8xmc");
+        // $client = new \Vonage\Client($basic);
+
+        // $response = $client->sms()->send(
+        //     new \Vonage\SMS\Message\SMS("237695426414","GM-SMART", 'Bonjour et bienvenu !  Mr(Mme) . Votre inscription s\'est effectuée avec succès et vous pouvez maintenant profiter de l’application.')
+        // );
+        
+        // $message = $response->current();
+
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string'
