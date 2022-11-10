@@ -35,7 +35,9 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
+        // return $request->all();
+
         // on creer la commande
         $commande = Order::create([
             'reference' => time(),
@@ -45,7 +47,9 @@ class OrderController extends Controller
             'customer_id' => $request->client,
             'user_id'   => $request->user()->id,
             'etat'      => 'IMPAYER',
-            'company_id' => $request->user()->company_id
+            'company_id' => $request->user()->company_id,
+            'as_taxe' => $request->taxe === 'TVA' || $request->taxe === 'IR',
+            'total_ht' => $request->total_ht
         ]);
 
         // on créé la facture
@@ -53,7 +57,9 @@ class OrderController extends Controller
             'customer_id'     => $request->client,
             'order_id'   => $commande->id,
             'company_id' => $request->user()->company_id,
-            'reference' => Str::upper(Str::replace('...','',Str::limit(User::with(['company'])->where('id',$request->user()->id)->first()->company->name,3))).'-'.date('Y/m/d') ?? '0'
+            'as_tva' => $request->taxe === 'TVA',
+            'as_ir' => $request->taxe === 'IR',
+            'reference' => Str::upper(Str::replace('...','',Str::limit(User::with(['company'])->where('id',$request->user()->id)->first()->company->name,3))).'-'.date('Y-m-d') ?? '0'
         ]);
 
         foreach($request->carts as $cart){

@@ -17,7 +17,9 @@ class Order extends Model
         'customer_id',
         'user_id'  ,
         'desc',
-        'company_id'
+        'company_id',
+        'as_taxe',
+        'total_ht'
     ];
 
     public function scopeFilter($query,$filters){

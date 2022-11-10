@@ -71,11 +71,11 @@ class InvoiceController extends Controller
         if($invoice->statut !== 'PAYER'){
             $invoice->delete();
             return response([
-                "message" => "the invoice has been successfully deleted!"
+                "message" => "Votre facture a bien été supprimée avec succès !"
             ],201);
         }else{
             return response([
-                "error" => "The invoice has already been paid"
+                "error" => "Cette facture existe déjà !"
             ],201);
         }
     }
