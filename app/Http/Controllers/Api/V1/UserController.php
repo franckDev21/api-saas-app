@@ -31,7 +31,7 @@ class UserController extends Controller
         if($request->user()->role === 'SUPER'){
             return UserResource::collection(User::with('company')->where('role','ENTREPRISE')->get());
         }
-        return UserResource::collection(User::all());
+        // return UserResource::collection(User::all());
     }
 
     
