@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\AdminUser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,7 +25,8 @@ class CompanyFactory extends Factory
             'city'   => fake()->city(),
             'tel' => fake()->phoneNumber(),
             'email' => fake()->companyEmail(),
-            'number_of_employees' => rand(5,100)
+            'number_of_employees' => rand(5,100),
+            'admin_user_id' => AdminUser::inRandomOrder()->first()->id,
         ];
     }
 }

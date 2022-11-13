@@ -22,9 +22,15 @@ return new class extends Migration
             $table->string('country');
             $table->string('postal_code')->nullable();
             $table->string('city');
+            $table->string('NUI')->nullable();
+            $table->string('RCCM')->nullable();
             $table->string('tel')->nullable();
             $table->string('email')->unique();
             $table->integer('number_of_employees');
+            $table->foreignId('admin_user_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('admin_users', function (Blueprint $table) {
             $table->id();
             $table->string('photo')->nullable();
             $table->string('firstname');
@@ -22,17 +22,7 @@ return new class extends Migration
             $table->string('tel')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role',['USER','GERANT','CAISSIER'])->default('USER');
             $table->boolean('active')->default(false);
-
-            $table->foreignId('company_id')
-                ->constrained()
-                ->onDelete('cascade');
-
-            $table->foreignId('admin_user_id')
-                ->constrained()
-                ->onDelete('cascade');
-                
             $table->rememberToken();
             $table->timestamps();
         });
@@ -45,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('admin_users');
     }
 };

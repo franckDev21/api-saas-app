@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\AdminUser;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -18,27 +19,15 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        /**
-         * 
-         * $table->string('fisrstname');
-            $table->string('lastname');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->enum('role',['SUPER','ADMIN','ENTREPRISE','ADMIN','USER'])->default('ENTREPRISE');
-            $table->boolean('as_company')->default(false);
-            $table->integer('company_id')->nullable();
-         * 
-         */
-        $role = ['ADMIN','ENTREPRISE','ADMIN','USER'][rand(0,3)];
+        $role = ['GERANT','CAISSIER','USER'][rand(0,2)];
         return [
             'firstname' => fake()->firstName(),
             'lastname' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'role' => $role,
-            'as_company' => $role === 'ENTREPRISE' ? true : false,
             'company_id' => Company::inRandomOrder()->first()->id,
+            'admin_user_id' => AdminUser::inRandomOrder()->first()->id,
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ];

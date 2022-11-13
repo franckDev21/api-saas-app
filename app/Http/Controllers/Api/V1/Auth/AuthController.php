@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminUser;
+use App\Models\SuperUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -10,15 +12,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request){
-        if($request->type && $request->type === 'ENTREPRISE'){
+    public function register(Request $request)
+    {
+        if ($request->type && $request->type === 'ENTREPRISE') {
             $request->validate([
                 'firstname'  => 'required|string|min:3|max:200',
                 'lastname'  => 'required|string|min:3|max:200',
                 'email' => 'required|email|unique:users,email|min:3|max:200',
                 'password' => 'required|string'
             ]);
-        }else{
+        } else {
             $request->validate([
                 'firstname'  => 'required|string|min:3|max:200',
                 'lastname'  => 'required|string|min:3|max:200',
@@ -26,7 +29,7 @@ class AuthController extends Controller
                 'password' => 'required|string|confirmed'
             ]);
         }
-        
+
         $user = User::create([
             'firstname' => $request->firstname,
             'lastname'  => $request->lastname,
@@ -41,19 +44,22 @@ class AuthController extends Controller
             'token' => $token
         ];
 
-        return response($response,201);
+        return response($response, 201);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         // $basic  = new \Vonage\Client\Credentials\Basic("88ca908d", "2pAn4AWNsGYl8xmc");
         // $client = new \Vonage\Client($basic);
 
         // $response = $client->sms()->send(
         //     new \Vonage\SMS\Message\SMS("237695426414","GM-SMART", 'Bonjour et bienvenu !  Mr(Mme) . Votre inscription s\'est effectuée avec succès et vous pouvez maintenant profiter de l’application.')
         // );
-        
-        // $message = $response->current();
 
+        // $message = $response->current();
+        
+        $role = 'USER';
+        $prermissions = [];
 
         $request->validate([
             'email' => 'required|email',
@@ -61,33 +67,47 @@ class AuthController extends Controller
         ]);
 
         // Check email
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('email', $request->email)->first();
+        $adminUser = AdminUser::where('email', $request->email)->first();
+        $superUser = SuperUser::where('email', $request->email)->first();
 
         // Check password
-        if(!$user || !Hash::check($request->password, $user->password)){
+        if (
+            (!$user || !Hash::check($request->password, $user->password)) &&
+            (!$adminUser || !Hash::check($request->password, $adminUser->password)) &&
+            (!$superUser || !Hash::check($request->password, $superUser->password))
+        ) {
             return response([
                 'message' => 'Incorrect identifier'
-            ],401);
+            ], 401);
         }
 
-        $token = $user->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
+        if ($user) {
+            $role = 'USER';
+            $token = $user->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
+        } else if ($adminUser) {
+            $role = 'ADMIN';
+            $token = $adminUser->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
+        } else if ($superUser) {
+            $token = $superUser->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
+        }
 
-        if($user->active){
+        if (($user->active ?? false) || ($adminUser->active ?? false) || ($superUser->active ?? false)) {
             $response = [
-                'user'  => $user,
+                'user'  => $user ?? $adminUser ?? $superUser,
                 'token' => $token
             ];
-    
-            return response($response,201);
-        }else{
+
+            return response($response, 201);
+        } else {
             return response([
                 'error' => "Votre compte n’a pas encore été activé"
-            ],201);
+            ], 201);
         }
-        
     }
 
-    public function updateUserPassword(Request $request){
+    public function updateUserPassword(Request $request)
+    {
         $request->validate([
             'old_password' => 'required|string',
             'new_password' => 'required|string',
@@ -95,11 +115,11 @@ class AuthController extends Controller
         ]);
 
 
-        if(!Hash::check($request->old_password,$request->user()->password)){
+        if (!Hash::check($request->old_password, $request->user()->password)) {
             return "Incorrect password";
         }
-        
-        if(trim($request->new_password) !== trim($request->confirm_password)){
+
+        if (trim($request->new_password) !== trim($request->confirm_password)) {
             return "The passwords do not match";
         }
 
@@ -109,11 +129,12 @@ class AuthController extends Controller
 
         return response([
             'message' => 'Your password has been successfully updated'
-        ],201);
+        ], 201);
     }
 
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         auth()->user()->tokens()->delete();
 
         return response([
@@ -121,7 +142,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function getUserInfo(Request $request){
+    public function getUserInfo(Request $request)
+    {
         return $request->user();
     }
 }

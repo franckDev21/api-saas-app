@@ -16,14 +16,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        \App\Models\AdminUser::factory(4)->create();
         \App\Models\Company::factory(4)->create();
-        \App\Models\User::factory(100)->create();
-        \App\Models\User::factory()->create([
+        \App\Models\User::factory(5)->create();
+        \App\Models\SuperUser::factory()->create([
             'firstname' => 'All',
             'lastname' => 'H corp',
             'email' => 'info@allhcorp.com',
-            'role' => 'SUPER',
-            'as_company' => false,
             'active' => true
         ]);
         \App\Models\Customer::factory(10)->create();
