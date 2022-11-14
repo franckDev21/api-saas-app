@@ -47,6 +47,16 @@ class AuthController extends Controller
         return response($response, 201);
     }
 
+    private function getTabName(array $tabs)
+    {
+        $newTab = [];
+        foreach ($tabs as $tab) {
+            $newTab[] = $tab['name'];
+        }
+
+        return $newTab;
+    }
+
     public function login(Request $request)
     {
         // $basic  = new \Vonage\Client\Credentials\Basic("88ca908d", "2pAn4AWNsGYl8xmc");
@@ -57,7 +67,7 @@ class AuthController extends Controller
         // );
 
         // $message = $response->current();
-        
+
         $role = 'USER';
         $prermissions = [];
 
@@ -83,19 +93,25 @@ class AuthController extends Controller
         }
 
         if ($user) {
-            $role = 'USER';
+            $roles = $this->getTabName($user->roles->toArray());
             $token = $user->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
+            $prermissions = $this->getTabName($user->allPermissions()->toArray());
         } else if ($adminUser) {
-            $role = 'ADMIN';
+            $roles = $this->getTabName($adminUser->roles->toArray());
             $token = $adminUser->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
+            $prermissions = $this->getTabName($adminUser->allPermissions()->toArray());
         } else if ($superUser) {
+            $roles = $this->getTabName($superUser->roles->toArray());
             $token = $superUser->createToken('M2mwMYQ91JKfw5M2mwMYQM2mwMYQ91JKfw5uFocsInqzZL91JKfw5uFJ8LocsInqzZLuFJcsInqzZL')->plainTextToken;
+            $prermissions = $this->getTabName($superUser->allPermissions()->toArray());
         }
 
         if (($user->active ?? false) || ($adminUser->active ?? false) || ($superUser->active ?? false)) {
             $response = [
                 'user'  => $user ?? $adminUser ?? $superUser,
-                'token' => $token
+                'token' => $token,
+                'roles' => $roles,
+                'prermissions' => $prermissions
             ];
 
             return response($response, 201);

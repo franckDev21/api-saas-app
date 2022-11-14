@@ -19,10 +19,15 @@ class Company extends Model
         'tel',
         'email',
         'number_of_employees',
-        'postal_code'
+        'postal_code',
+        'admin_user_id'
     ];
 
     public function users(){
         return $this->hasMany(User::class);
+    }
+
+    public function adminUser(){
+        return $this->belongsTo(AdminUser::class);
     }
 }

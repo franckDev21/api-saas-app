@@ -30,7 +30,8 @@ class User extends Authenticatable
         'company_id',
         'photo',
         'active',
-        'tel'
+        'tel',
+        'admin_user_id'
     ];
 
     /**
@@ -54,5 +55,9 @@ class User extends Authenticatable
 
     public function company(){
         return $this->belongsTo(Company::class);
+    }
+
+    public function adminUser(){
+        return $this->belongsTo(AdminUser::class);
     }
 }
